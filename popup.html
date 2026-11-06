@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="icons/icon48.png" width="36" height="36" alt="">
+    <div class="title"><b>BlurryChats</b><span>Hover to reveal</span></div>
+    <label class="switch big" title="Turn on / off"><input type="checkbox" data-key="enabled"><i></i></label>
+  </header>
+
+  <h2>Pause</h2>
+  <div class="row pause" id="pauseRow">
+    <span id="pauseLabel">Show all for</span>
+    <select id="pauseMinutes" data-key="pauseMinutes">
+      <option value="1">1 min</option><option value="2">2 min</option><option value="5">5 min</option>
+      <option value="15">15 min</option><option value="30">30 min</option>
+    </select>
+    <button class="btn" id="pauseBtn" type="button">Pause</button>
+  </div>
+
+  <h2>Blur these</h2>
+  <div class="chips" id="chips"></div>
+
+  <h2>Blur strength <output id="amountOut"></output></h2>
+  <input type="range" id="amount" data-key="amount" min="2" max="20" step="1">
+
+  <h2>Smart hide</h2>
+  <div class="row"><span>Hide chats when idle</span>
+    <select data-key="idleSeconds">
+      <option value="15">15 sec</option><option value="30">30 sec</option>
+      <option value="60">1 min</option><option value="300">5 min</option>
+    </select>
+    <label class="switch"><input type="checkbox" data-key="idle"><i></i></label></div>
+  <div class="row"><span>Hide when I leave this window</span>
+    <label class="switch"><input type="checkbox" data-key="leave"><i></i></label></div>
+  <div class="row"><span>Show all while mouse is on page</span>
+    <label class="switch"><input type="checkbox" data-key="peek"><i></i></label></div>
+  <div class="row"><span>Instant (no fade)</span>
+    <label class="switch"><input type="checkbox" data-key="instant"><i></i></label></div>
+
+  <details id="safeBox">
+    <summary>Never blur these chats <output id="safeCount"></output></summary>
+    <button class="btn wide" id="addOpen" type="button">Add the chat that's open now</button>
+    <div class="inline">
+      <input type="text" id="safeName" placeholder="Or type the exact chat name" autocomplete="off">
+      <button class="btn" id="safeAdd" type="button">Add</button>
+    </div>
+    <ul id="safeList"></ul>
+    <p class="hint" id="safeHint"></p>
+  </details>
+
+  <details id="lockBox">
+    <summary>Password lock <output id="lockStatus"></output></summary>
+    <div class="row"><span>Ask for password</span>
+      <select id="lockMode">
+        <option value="open">every time I open it</option>
+        <option value="timeout">after I've been away</option>
+      </select></div>
+    <div class="row" id="minsRow"><span>Lock after being away</span>
+      <select id="lockMins">
+        <option value="1">1 min</option><option value="5">5 min</option><option value="15">15 min</option>
+        <option value="30">30 min</option><option value="60">1 hour</option><option value="240">4 hours</option>
+      </select></div>
+
+    <div id="lockOn" hidden>
+      <button class="btn wide primary" id="lockNow" type="button">Lock now</button>
+      <input type="password" id="pwCur" placeholder="Current password (to change or remove the password)" autocomplete="off">
+    </div>
+
+    <input type="password" id="pwNew" placeholder="New password" autocomplete="new-password">
+    <input type="password" id="pwNew2" placeholder="Repeat new password" autocomplete="new-password">
+
+    <div id="lockOff">
+      <button class="btn wide primary" id="lockTurnOn" type="button">Turn on password lock</button>
+    </div>
+    <div id="lockOnBtns" class="btns" hidden>
+      <button class="btn" id="lockChange" type="button">Change password</button>
+      <button class="btn danger" id="lockRemove" type="button">Remove lock</button>
+    </div>
+    <p class="hint" id="lockMsg"></p>
+  </details>
+
+  <p class="links">
+    <a href="https://forms.gle/49TdJo8GzzbBu3y96" target="_blank" rel="noopener">Send feedback</a>
+    <span>·</span>
+    <a href="mailto:contact@desicoders.com">Email support</a>
+  </p>
+
+  <p class="foot">Shortcuts: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> on/off · <kbd>P</kbd> pause · <kbd>L</kbd> lock<br>works only on WhatsApp Web · nothing leaves your browser</p>
+
+  <script src="defaults.js"></script>
+  <script src="lockcore.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

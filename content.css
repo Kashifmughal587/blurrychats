@@ -1,0 +1,154 @@
+/* ===== How it works =====
+   JS adds classes like "bc-on" and "bc-messages" to <html>.
+   Blur amount is stored in the variable --bc-blur.
+   Hovering something sets --bc-blur to 0 for that thing (and everything inside it),
+   so it shows clearly. If WhatsApp changes its code, only the SELECTORS need fixing.
+
+   Profile pictures: WhatsApp puts an inline style "--x-height / --x-width" on every
+   round or squircle avatar box (chats, communities, status rings). We use that as the hook. */
+
+html.bc-on { --bc-blur: var(--bc-amount, 7px); --bc-fade: 0.2s; }
+html.bc-on.bc-instant { --bc-fade: 0s; }
+html.bc-on.bc-peek:hover { --bc-blur: 0px; }
+
+/* ---------- WHAT GETS BLURRED ---------- */
+
+/* Chat list: name (only the name) */
+html.bc-on.bc-names #pane-side [data-testid="cell-frame-title"],
+/* Chat list: last message preview (icon + text + everything in that row) */
+html.bc-on.bc-preview #pane-side [data-testid="cell-frame-secondary"],
+/* Messages: the whole text block (text + link preview card + title + description + url) */
+html.bc-on.bc-messages #main div.copyable-text,
+/* Media */
+html.bc-on.bc-media #main [data-id] img:not(.emoji),
+html.bc-on.bc-media #main [data-id] video,
+html.bc-on.bc-media #main [data-id] canvas,
+/* Media gallery (full screen viewer) */
+html.bc-on.bc-gallery [data-animate-media-viewer] img,
+html.bc-on.bc-gallery [data-animate-media-viewer] video,
+html.bc-on.bc-gallery div[role="dialog"] img,
+html.bc-on.bc-gallery div[role="dialog"] video,
+/* Text input box (the box AND the text inside it) */
+html.bc-on.bc-input #main footer [contenteditable="true"],
+html.bc-on.bc-input [data-testid="conversation-compose-box-input"],
+/* Profile pictures: status rings (whole thing) */
+html.bc-on.bc-pics [data-testid="chatlist-status-ring"],
+/* Profile pictures: normal / community avatars (skip the ones inside a status ring) */
+html.bc-on.bc-pics #pane-side [style*="--x-height"]:not([data-testid="chatlist-status-ring"] *),
+html.bc-on.bc-pics header [style*="--x-height"],
+/* Profile pictures: plain images that are NOT inside an avatar box */
+html.bc-on.bc-pics #pane-side img:not([style*="--x-height"] img),
+html.bc-on.bc-pics header img:not([style*="--x-height"] img),
+html.bc-on.bc-pics [data-icon="default-user"],
+html.bc-on.bc-pics [data-icon="default-group"],
+/* Chat name at the top of an open chat */
+html.bc-on.bc-names #main header span[title],
+html.bc-on.bc-names #main header span[dir="auto"] {
+  filter: blur(var(--bc-blur, 0px));
+  transition: filter var(--bc-fade, 0.2s) ease;
+}
+
+/* Group chats: sender name + the small label under it */
+html.bc-on.bc-names #main div:has(> [data-testid="author"]),
+html.bc-on.bc-names #main div:has(> [data-testid="author"]) + div {
+  /* --bc-name-blur is set to 0 when you hover ANY part of the message (voice, sticker, file, text...) */
+  filter: blur(var(--bc-name-blur, var(--bc-blur, 0px)));
+  transition: filter var(--bc-fade, 0.2s) ease;
+}
+
+/* Message text that is not inside the normal text block
+   (NOT the box you type in - that belongs to "Text input") */
+html.bc-on.bc-messages #main span.selectable-text:not(div.copyable-text *):not(footer *):not([data-testid="conversation-compose-box-input"] *) {
+  filter: blur(var(--bc-blur, 0px));
+  transition: filter var(--bc-fade, 0.2s) ease;
+}
+
+/* Link preview picture counts as media */
+html.bc-on.bc-media #main [data-testid^="link-preview-thumbnail"] {
+  filter: blur(var(--bc-blur, 0px));
+}
+
+/* ---------- WHAT SHOWS ON HOVER ---------- */
+
+/* Chat list: hover the ROW -> only the NAME shows */
+html.bc-on #pane-side [role="listitem"]:hover [data-testid="cell-frame-title"],
+html.bc-on #pane-side [data-testid="cell-frame-container"]:hover [data-testid="cell-frame-title"] {
+  --bc-blur: 0px;
+}
+
+/* Calls tab: call rows are [data-testid^="chatlist-message-"] (no listitem / cell-frame-container),
+   so hovering the row shows the name and the picture */
+html.bc-on #pane-side [data-testid^="chatlist-message-"]:hover [data-testid="cell-frame-title"],
+html.bc-on #pane-side [data-testid^="chatlist-message-"]:hover [style*="--x-height"],
+html.bc-on #pane-side [data-testid^="chatlist-message-"]:hover img {
+  --bc-blur: 0px;
+}
+
+/* Chat list: hover the MESSAGE line -> message shows */
+html.bc-on #pane-side [data-testid="cell-frame-secondary"]:hover {
+  --bc-blur: 0px;
+}
+
+/* Chat messages: hover a message -> its name + text + link card all show */
+html.bc-on #main div:has(> div.copyable-text):hover {
+  --bc-blur: 0px;
+}
+
+/* Sender name (groups): hovering anywhere on the message shows it.
+   Needed for voice messages, stickers and attachments, which have no text block to hover. */
+html.bc-on #main [data-id]:hover,
+html.bc-on #main [role="row"]:hover {
+  --bc-name-blur: 0px;
+}
+
+/* Everything else: hover the thing itself */
+html.bc-on #main span.selectable-text:hover,
+html.bc-on #main [data-id] img:hover,
+html.bc-on #main [data-id] video:hover,
+html.bc-on #main [data-id] canvas:hover,
+html.bc-on [data-animate-media-viewer] img:hover,
+html.bc-on [data-animate-media-viewer] video:hover,
+html.bc-on div[role="dialog"] img:hover,
+html.bc-on div[role="dialog"] video:hover,
+html.bc-on #main footer [contenteditable="true"]:hover,
+html.bc-on #main footer [contenteditable="true"]:focus,
+html.bc-on [data-testid="conversation-compose-box-input"]:hover,
+html.bc-on [data-testid="conversation-compose-box-input"]:focus,
+html.bc-on [data-testid="chatlist-status-ring"]:hover,
+html.bc-on #pane-side [style*="--x-height"]:hover,
+html.bc-on header [style*="--x-height"]:hover,
+html.bc-on #pane-side img:hover,
+html.bc-on header img:hover,
+html.bc-on #main header span[title]:hover,
+html.bc-on #main header span[dir="auto"]:hover {
+  --bc-blur: 0px;
+}
+
+/* blur whole app when you are idle */
+html.bc-on.bc-hide #app {
+  filter: blur(25px) !important;
+  transition: filter 0.3s ease;
+}
+
+/* ---------- NEVER-BLUR CHATS ---------- */
+
+/* Chat list: rows marked by content.js */
+html.bc-on #pane-side [data-bc-safe],
+html.bc-on #pane-side [data-bc-safe] * {
+  filter: none !important;
+}
+
+/* The open chat is on the never-blur list: show all of it (messages, media, names, typing box) */
+html.bc-on.bc-safe-open #main,
+html.bc-on.bc-safe-open #main *,
+html.bc-on.bc-safe-open [data-animate-media-viewer] img,
+html.bc-on.bc-safe-open [data-animate-media-viewer] video,
+html.bc-on.bc-safe-open div[role="dialog"] img,
+html.bc-on.bc-safe-open div[role="dialog"] video {
+  filter: none !important;
+}
+
+/* ---------- PASSWORD LOCK ---------- */
+/* lock.js adds "bc-locked" while the lock screen is needed. The lock screen itself lives outside <body>. */
+html.bc-locked { overflow: hidden !important; }
+html.bc-locked body { visibility: hidden !important; }

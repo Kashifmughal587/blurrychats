@@ -1,0 +1,78 @@
+{
+  "manifest_version": 3,
+  "name": "BlurryChats",
+  "version": "1.3.0",
+  "description": "Blur WhatsApp Web chats, names and photos until you hover. Includes pause, never-blur list and password lock.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://web.whatsapp.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "BlurryChats",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://web.whatsapp.com/*"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "lockcore.js",
+        "lock.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://web.whatsapp.com/*"
+      ],
+      "js": [
+        "defaults.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "toggle-blur": {
+      "suggested_key": {
+        "default": "Alt+Shift+B"
+      },
+      "description": "Turn BlurryChats on/off"
+    },
+    "pause-blur": {
+      "suggested_key": {
+        "default": "Alt+Shift+P"
+      },
+      "description": "Show everything for a while / resume blur"
+    },
+    "lock-now": {
+      "suggested_key": {
+        "default": "Alt+Shift+L"
+      },
+      "description": "Lock WhatsApp Web now"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "short_name": "BlurryChats",
+  "minimum_chrome_version": "105"
+}
