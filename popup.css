@@ -74,3 +74,6 @@ details input:focus { outline: none; border-color: var(--accent); }
 .links a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .links a:hover { text-decoration: underline; }
 .links span { color: var(--muted); margin: 0 6px; }
+.support { display: block; margin-top: 14px; padding: 9px 10px; border-radius: 8px; text-align: center;
+  background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; }
+.support:hover { background: #4338ca; }

@@ -76,6 +76,17 @@ html.bc-on #pane-side [data-testid="cell-frame-container"]:hover [data-testid="c
   --bc-blur: 0px;
 }
 
+/* Chat list: hover row (any kind) or the name itself -> name shows (fixes pinned chats) */
+html.bc-on #pane-side :is([role="listitem"], [role="row"], [role="gridcell"], [data-testid="cell-frame-container"]):hover [data-testid="cell-frame-title"],
+html.bc-on #pane-side [data-testid="cell-frame-title"]:hover {
+  --bc-blur: 0px;
+}
+
+/* Open chat header: hover anywhere on name/photo area -> name and photo show */
+html.bc-on #main header [data-testid="conversation-info-header"]:hover {
+  --bc-blur: 0px;
+}
+
 /* Calls tab: call rows are [data-testid^="chatlist-message-"] (no listitem / cell-frame-container),
    so hovering the row shows the name and the picture */
 html.bc-on #pane-side [data-testid^="chatlist-message-"]:hover [data-testid="cell-frame-title"],
